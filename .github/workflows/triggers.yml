@@ -1,0 +1,51 @@
+name: Triggers
+run-name: ¡Estoy aprendiendo a usar diferentes Triggers!
+on:
+  push:
+    branches:
+      - aprendiendo-github-actions
+  pull_request:
+    types: [opened, synchronize, reopened]
+  issues:
+    types:
+      - labeled
+  workflow_dispatch:
+    inputs:
+      gravedad:
+        description: 'Seleccionar gravedad'
+        default: Media
+        required: true
+        type: choice
+        options:
+        - Alta
+        - Media
+        - Baja
+      nombre:
+        description: 'ayuger'
+        required: true
+        default: ayuger
+        type: string
+  schedule:
+    - cron:  '15 22 * * *'
+jobs:
+  hola-mundo-manual:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Definir nombre
+        run: echo "USERNAME=${{ inputs.nombre }}" >> $GITHUB_ENV
+      - name: Definir lenguaje
+        run: echo "GRAVITY=${{ inputs.gravedad }}" >> $GITHUB_ENV
+      - name: Correr script
+        run: echo "Correr script ..."
+  hola-mundo:
+    if: ${{ github.event_name != 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Definir variable
+        run: echo "USERNAME=${{ github.actor }}" >> $GITHUB_ENV
+      - name: Correr script
+        run: echo "Correr script ..."
